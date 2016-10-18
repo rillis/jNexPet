@@ -28,6 +28,7 @@ public class Detalhado extends JDialog {
 
 
 	public Detalhado(String CLIENTE, String ANIMAL, String DATAHORA, String SERVICO, String PRECOFINAL, String ADICIONAIS, String FORMA, String CONFIRMADO, String PAGOU) {
+		setTitle("NexPet");
 		try {
 	        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 	    } 
