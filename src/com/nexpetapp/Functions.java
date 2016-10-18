@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 public class Functions {
 		private final static String USER_AGENT = "Mozilla/5.0";
-		public final static String WEBSERVICE = "http://localhost:8080/webservice/java/";
+		public final static String WEBSERVICE = "http://nexpetapp.com.br/java/";
 		public static String sendPost(String url, String email, String senha) throws Exception {
 
 		URL obj = new URL(url);
@@ -101,7 +101,7 @@ public class Functions {
 		}
 		public static String[][] getAgendamentos(){
 			try {
-				JSONObject json = new JSONObject(sendPostAgendamentos(WEBSERVICE+"getAgendamentos.php", "Happy Pet"));
+				JSONObject json = new JSONObject(sendPostAgendamentos(WEBSERVICE+"getAgendamentos.php", Credentials.NOME));
 				//PADROES
 				JSONObject user = json.getJSONObject("user");
 				//N

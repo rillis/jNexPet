@@ -21,6 +21,7 @@ public class Detalhado extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	public JButton btnConfirmar,btnPagou;
+	public JLabel lblNomeCliente;
 
 	/**
 	 * Launch the application.
@@ -40,7 +41,7 @@ public class Detalhado extends JDialog {
 		ImageIcon icon = new ImageIcon(url);
 		getContentPane().setLayout(null);
 		{
-			JLabel lblNomeCliente = new JLabel("Nome do cliente: "+CLIENTE);
+			lblNomeCliente = new JLabel("Nome do cliente: "+CLIENTE);
 			lblNomeCliente.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			lblNomeCliente.setBounds(10, 25, 414, 22);
 			getContentPane().add(lblNomeCliente);

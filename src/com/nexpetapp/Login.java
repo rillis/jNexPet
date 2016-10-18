@@ -128,6 +128,7 @@ public class Login extends JFrame {
 			boolean error = json.getBoolean("error");
 			if(!error){
 				JSONObject userJson = json.getJSONObject("user");
+				System.out.print(userJson);
 				Credentials.UID = json.getString("uid");
 				Credentials.TELEFONE = userJson.getString("telefone");
 				Credentials.ENDERECO =  userJson.getString("endereco");
@@ -138,9 +139,17 @@ public class Login extends JFrame {
 				Credentials.EMAIL = userJson.getString("email");
 				Credentials.RESPONSAVEL = userJson.getString("nomeResponsavel");
 				Credentials.DESCRICAO = userJson.getString("descricao");
-				JOptionPane.showMessageDialog(getComponent(0), "Login realizado com sucesso!");
 				dispose();
-				new Agendamentos().setVisible(true);
+				new Thread(){
+					public void run(){
+						Entrando e = new Entrando();
+						e.setAlwaysOnTop(true);
+						e.setVisible(true);
+						Constants.agendamentos = Functions.getAgendamentos();
+						e.dispose();
+						new Agendamentos().setVisible(true);
+					}
+				}.start();
 			}else{
 				String msg = json.getString("error_msg");
 				JOptionPane.showMessageDialog(getComponent(0), msg);

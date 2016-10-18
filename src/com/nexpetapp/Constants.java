@@ -1,6 +1,7 @@
 package com.nexpetapp;
 
 public class Constants {
+	public static String[][] agendamentos = null;
 	public static int ID = 0;
 	public static int UID = 1;
 	public static int DATAAGENDADA = 2;

@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +83,7 @@ public class Agendamentos extends JFrame {
 		
 		DefaultListModel listaVerificados = new DefaultListModel();
 		DefaultListModel listaNaoVerificados = new DefaultListModel();
-		String[][] a = getAgendamentos();
+		String[][] a = Constants.agendamentos;
 		for (int i = 0; i < a.length; i++) {
 			if(a[i][Constants.CONFIRMADO].equals("0")){
 				listaNaoVerificados.addElement("["+a[i][Constants.ID]+"]: "+a[i][Constants.NOMEANIMAL]+" ("+a[i][Constants.SERVICO]+") às "+dataArrumada(a[i][Constants.DATAAGENDADA]));
@@ -89,6 +91,17 @@ public class Agendamentos extends JFrame {
 				listaVerificados.addElement("["+a[i][Constants.ID]+"]: "+a[i][Constants.NOMEANIMAL]+" ("+a[i][Constants.SERVICO]+") às "+dataArrumada(a[i][Constants.DATAAGENDADA]));
 			}
 		}
+		
+		JButton btnLogout = new JButton("Logout");
+		btnLogout.setFocusable(false);
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				new Login().setVisible(true);
+			}
+		});
+		btnLogout.setBounds(10, 11, 89, 23);
+		contentPane.add(btnLogout);
 		
 		JLabel lblAgendamentos = new JLabel("Agendamentos");
 		lblAgendamentos.setFont(new Font("Century Gothic", Font.PLAIN, 24));
@@ -112,6 +125,25 @@ public class Agendamentos extends JFrame {
 		scrollPane.setBounds(list_1.bounds());
 		list_1.setModel(listaNaoVerificados);
 		
+		list.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent evt) {
+		    	list_1.setSelectedIndices(new int[] {-1});
+		        JList list = (JList)evt.getSource();
+		        if (evt.getClickCount() == 2) {
+		        	detalhes(list.getSelectedIndex(),list.getSelectedValue(),false);
+		        }
+		    }
+		});
+		
+		list_1.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent evt) {
+		    	list.setSelectedIndices(new int[] {-1});
+		        JList list = (JList)evt.getSource();
+		        if (evt.getClickCount() == 2) {
+		        	detalhes(list_1.getSelectedIndex(),list_1.getSelectedValue(),true);
+		        }
+		    }
+		});
 		scrollPane2.setViewportView(list);
 		contentPane.add(scrollPane2);
 		scrollPane.setViewportView(list_1);
@@ -120,52 +152,10 @@ public class Agendamentos extends JFrame {
 		JButton btnGetid = new JButton("Informa\u00E7\u00F5es");
 		btnGetid.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(list.getSelectedIndex()!=-1){
-				String[] a =list.getSelectedValue().toString().split("]");
-				String id = a[0].replace("[", "");
-				String[][] list = Functions.getAgendamentos();
-				String s_NOME = null, s_ANIMAL = null, s_DATA = null,s_SERVICO = null,s_PRECOFINAL = null,t_ADICIONAIS = null, s_ADICIONAIS = null,t_FORMA = null, s_FORMA = null,t_CONFIRMADO = null, s_CONFIRMADO = null,t_PAGOU = null, s_PAGOU = null;
-				for (int i = 0; i < list.length; i++) {
-					if(Integer.parseInt(list[i][Constants.ID])==Integer.parseInt(id)){
-						s_NOME = Functions.getNamebyUID(list[i][Constants.USUARIOUID]);
-						s_ANIMAL = list[i][Constants.NOMEANIMAL];
-						s_DATA = Functions.dataArrumada(list[i][Constants.DATAAGENDADA]);
-						s_SERVICO = list[i][Constants.SERVICO];
-						s_PRECOFINAL = list[i][Constants.PRECOFINAL];
-						t_ADICIONAIS = list[i][Constants.SERVICOADICIONAL];
-						t_FORMA = list[i][Constants.FORMAPAGAMENTO];
-						t_CONFIRMADO = list[i][Constants.CONFIRMADO];
-						t_PAGOU = list[i][Constants.PAGOU];
-						if(t_ADICIONAIS.equals("empty")){
-							s_ADICIONAIS = "Nenhum";
-						}else{
-							s_ADICIONAIS = t_ADICIONAIS;
-						}
-						if(t_FORMA.equals("empty")){
-							s_FORMA = "Nenhum especificado";
-						}else{
-							s_FORMA = t_FORMA;
-						}
-						if(t_CONFIRMADO.equals("0")){
-							s_CONFIRMADO = "Não";
-						}else{
-							s_CONFIRMADO = "Sim";
-						}
-						if(t_PAGOU.equals("0")){
-							s_PAGOU = "Não";
-						}else{
-							s_PAGOU = "Sim";
-						}
-					}
-				}
-				Detalhado det = new Detalhado(s_NOME, s_ANIMAL, s_DATA, s_SERVICO, s_PRECOFINAL, s_ADICIONAIS, s_FORMA, s_CONFIRMADO, s_PAGOU);
-				if(s_PAGOU.equals("Sim")){
-					det.btnPagou.setEnabled(false);
-				}
-				det.btnConfirmar.setEnabled(false);
-				det.setVisible(true);
+				detalhes(list.getSelectedIndex(),list.getSelectedValue(),false);
 			}
-			}
+
+			
 		});
 		btnGetid.setBounds(362, 437, 116, 23);
 		contentPane.add(btnGetid);
@@ -183,51 +173,7 @@ public class Agendamentos extends JFrame {
 		JButton btnGetid_1 = new JButton("Informa\u00E7\u00F5es");
 		btnGetid_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(list_1.getSelectedIndex()!=-1){
-				String[] a =list_1.getSelectedValue().toString().split("]");
-				String id = a[0].replace("[", "");
-				String[][] list = Functions.getAgendamentos();
-				String s_NOME = null, s_ANIMAL = null, s_DATA = null,s_SERVICO = null,s_PRECOFINAL = null,t_ADICIONAIS = null, s_ADICIONAIS = null,t_FORMA = null, s_FORMA = null,t_CONFIRMADO = null, s_CONFIRMADO = null,t_PAGOU = null, s_PAGOU = null;
-				for (int i = 0; i < list.length; i++) {
-					if(Integer.parseInt(list[i][Constants.ID])==Integer.parseInt(id)){
-						s_NOME = Functions.getNamebyUID(list[i][Constants.USUARIOUID]);
-						s_ANIMAL = list[i][Constants.NOMEANIMAL];
-						s_DATA = Functions.dataArrumada(list[i][Constants.DATAAGENDADA]);
-						s_SERVICO = list[i][Constants.SERVICO];
-						s_PRECOFINAL = list[i][Constants.PRECOFINAL];
-						t_ADICIONAIS = list[i][Constants.SERVICOADICIONAL];
-						t_FORMA = list[i][Constants.FORMAPAGAMENTO];
-						t_CONFIRMADO = list[i][Constants.CONFIRMADO];
-						t_PAGOU = list[i][Constants.PAGOU];
-						if(t_ADICIONAIS.equals("empty")){
-							s_ADICIONAIS = "Nenhum";
-						}else{
-							s_ADICIONAIS = t_ADICIONAIS;
-						}
-						if(t_FORMA.equals("empty")){
-							s_FORMA = "Nenhum especificado";
-						}else{
-							s_FORMA = t_FORMA;
-						}
-						if(t_CONFIRMADO.equals("0")){
-							s_CONFIRMADO = "Não";
-						}else{
-							s_CONFIRMADO = "Sim";
-						}
-						if(t_PAGOU.equals("0")){
-							s_PAGOU = "Não";
-						}else{
-							s_PAGOU = "Sim";
-						}
-					}
-				}
-				Detalhado det = new Detalhado(s_NOME, s_ANIMAL, s_DATA, s_SERVICO, s_PRECOFINAL, s_ADICIONAIS, s_FORMA, s_CONFIRMADO, s_PAGOU);
-				if(s_PAGOU.equals("Sim")){
-					det.btnPagou.setEnabled(false);
-				}
-				det.btnConfirmar.setEnabled(true);
-				det.setVisible(true);
-			}
+				detalhes(list_1.getSelectedIndex(),list_1.getSelectedValue(),true);
 			}
 		});
 		btnGetid_1.setBounds(362, 249, 116, 23);
@@ -239,5 +185,64 @@ public class Agendamentos extends JFrame {
 		lblNewLabel.setIcon(icon);
 		contentPane.add(lblNewLabel);
 
+	}
+	public void detalhes(int index, Object value, boolean confirmado) {
+		if(index!=-1){
+			String[] a =value.toString().split("]");
+			String id = a[0].replace("[", "");
+			String[][] list = Functions.getAgendamentos();
+			String s_NOME = null, s_ANIMAL = null, s_DATA = null,s_SERVICO = null,s_PRECOFINAL = null,t_ADICIONAIS = null, s_ADICIONAIS = null,t_FORMA = null, s_FORMA = null,t_CONFIRMADO = null, s_CONFIRMADO = null,t_PAGOU = null, s_PAGOU = null;
+			int iCont = 0;
+			for (int i = 0; i < list.length; i++) {
+				if(Integer.parseInt(list[i][Constants.ID])==Integer.parseInt(id)){
+					iCont=i;
+					s_ANIMAL = list[i][Constants.NOMEANIMAL];
+					s_DATA = Functions.dataArrumada(list[i][Constants.DATAAGENDADA]);
+					s_SERVICO = list[i][Constants.SERVICO];
+					s_PRECOFINAL = list[i][Constants.PRECOFINAL];
+					t_ADICIONAIS = list[i][Constants.SERVICOADICIONAL];
+					t_FORMA = list[i][Constants.FORMAPAGAMENTO];
+					t_CONFIRMADO = list[i][Constants.CONFIRMADO];
+					t_PAGOU = list[i][Constants.PAGOU];
+					if(t_ADICIONAIS.equals("empty")){
+						s_ADICIONAIS = "Nenhum";
+					}else{
+						s_ADICIONAIS = t_ADICIONAIS;
+					}
+					if(t_FORMA.equals("empty")){
+						s_FORMA = "Nenhum especificado";
+					}else{
+						s_FORMA = t_FORMA;
+					}
+					if(t_CONFIRMADO.equals("0")){
+						s_CONFIRMADO = "Não";
+					}else{
+						s_CONFIRMADO = "Sim";
+					}
+					if(t_PAGOU.equals("0")){
+						s_PAGOU = "Não";
+					}else{
+						s_PAGOU = "Sim";
+					}
+				}
+			}
+			Detalhado det = new Detalhado("Carregando", s_ANIMAL, s_DATA, s_SERVICO, s_PRECOFINAL, s_ADICIONAIS, s_FORMA, s_CONFIRMADO, s_PAGOU);
+			trytochangename(iCont,list,det);
+			if(s_PAGOU.equals("Sim")){
+				det.btnPagou.setEnabled(false);
+			}
+			det.btnConfirmar.setEnabled(confirmado);
+			det.setVisible(true);
+		}
+	}
+
+	private void trytochangename(int i, String[][] list, Detalhado det) {
+		
+		new Thread(){
+			public void run(){
+				String s_NOME = Functions.getNamebyUID(list[i][Constants.USUARIOUID]);
+				det.lblNomeCliente.setText("Nome do cliente: "+s_NOME);
+			}
+		}.start();
 	}
 }
