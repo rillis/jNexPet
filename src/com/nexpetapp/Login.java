@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -22,10 +24,15 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
 import java.awt.event.ActionEvent;
 
 public class Login extends JFrame {
@@ -54,6 +61,8 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
+		List<Image> icons = Functions.getIconList();
+		setIconImages(icons);
 		setTitle("NexPet");
 		try {
 	        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

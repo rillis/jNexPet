@@ -1,12 +1,16 @@
 package com.nexpetapp;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.tools.JavaFileObject;
 
@@ -172,5 +176,18 @@ public class Functions {
 			}else{
 			return horas+"h"+minutos+" de "+dia+"/"+mes+"/"+ano;
 			}
+		}
+		public static List<Image> getIconList() {
+			List<Image> icons = new ArrayList<Image>();
+			URL icon16 = ClassLoader.getSystemResource("img/icon16.png");
+			URL icon24 = ClassLoader.getSystemResource("img/icon24.png");
+			URL icon32 = ClassLoader.getSystemResource("img/icon32.png");
+			URL icon64 = ClassLoader.getSystemResource("img/icon64.png");
+			Toolkit kit = Toolkit.getDefaultToolkit();
+			icons.add(kit.createImage(icon16));
+			icons.add(kit.createImage(icon24));
+			icons.add(kit.createImage(icon32));
+			icons.add(kit.createImage(icon64));
+			return icons;
 		}
 }
