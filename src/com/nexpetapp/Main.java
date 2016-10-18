@@ -1,8 +1,13 @@
 package com.nexpetapp;
+import static com.nexpetapp.Functions.*;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 public class Main {
 
 	public static void main(String[] args) {
+		//Intro
 		Intro i = new Intro();
 		i.setOpacity(0f);
 		i.setVisible(true);
@@ -19,6 +24,7 @@ public class Main {
 						Thread.sleep(10);
 					}
 					i.dispose();
+					new Login().setVisible(true);
 				}catch(Exception e){}
 			}
 		}.start();
