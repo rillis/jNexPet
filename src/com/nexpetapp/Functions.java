@@ -13,7 +13,8 @@ import javax.tools.JavaFileObject;
 import org.json.JSONObject;
 
 public class Functions {
-		private final static String USER_AGENT = "Mozilla/5.0";	
+		private final static String USER_AGENT = "Mozilla/5.0";
+		public final static String WEBSERVICE = "http://localhost:8080/webservice/java/";
 		public static String sendPost(String url, String email, String senha) throws Exception {
 
 		URL obj = new URL(url);
@@ -100,7 +101,7 @@ public class Functions {
 		}
 		public static String[][] getAgendamentos(){
 			try {
-				JSONObject json = new JSONObject(sendPostAgendamentos("http://localhost:8080/webservice/java/getAgendamentos.php", "Happy Pet"));
+				JSONObject json = new JSONObject(sendPostAgendamentos(WEBSERVICE+"getAgendamentos.php", "Happy Pet"));
 				//PADROES
 				JSONObject user = json.getJSONObject("user");
 				//N
@@ -138,7 +139,7 @@ public class Functions {
 		}
 		public static String getNamebyUID(String UID){
 			try {
-				JSONObject json = new JSONObject(sendPostAgendamentos("http://localhost:8080/webservice/java/name.php", UID));
+				JSONObject json = new JSONObject(sendPostAgendamentos(WEBSERVICE+"name.php", UID));
 				String nome;
 				try{
 					nome = json.getString("user");

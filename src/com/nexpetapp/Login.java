@@ -124,7 +124,7 @@ public class Login extends JFrame {
 	}
 	public void login(){
 		try {
-			JSONObject json = new JSONObject(sendPost("http://localhost:8080/webservice/java/login.php", textField.getText(), passwordField.getText()));
+			JSONObject json = new JSONObject(sendPost(Functions.WEBSERVICE+"login.php", textField.getText(), passwordField.getText()));
 			boolean error = json.getBoolean("error");
 			if(!error){
 				JSONObject userJson = json.getJSONObject("user");
