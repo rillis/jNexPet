@@ -3,7 +3,13 @@ package com.nexpetapp;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -189,5 +195,47 @@ public class Functions {
 			icons.add(kit.createImage(icon32));
 			icons.add(kit.createImage(icon64));
 			return icons;
+		}
+		public static ArrayList<String> read( File file ) throws FileNotFoundException, IOException{
+		    ArrayList<String> linhas;
+		        
+		    try (BufferedReader leitor = new BufferedReader( new FileReader(file) )) {
+		       linhas = new ArrayList<>();
+		       String linha = "";
+		            
+		       while( (linha = leitor.readLine()) != null ){
+		          if( linha.length() > 0 )
+		              linhas.add(linha);
+		       }
+		    }
+		    return linhas;
+		}
+		public static void delete(File file){
+			if(file.exists()){
+				file.delete();
+			}
+		}
+		public static void write(File file,String what) throws IOException{
+			BufferedWriter writer;
+			if(file.exists()){
+				writer = new BufferedWriter(new FileWriter(file,true));
+				writer.newLine();
+				writer.write(what);
+			}else{
+				writer = new BufferedWriter(new FileWriter(file));
+				writer.write(what);
+			}
+			writer.flush();
+			writer.close();
+		}
+		public static void createAutoLogin(String e, String s) {
+			File config = new File("config.np");
+			delete(config);
+			try {
+				write(config, e);
+				write(config, s);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 }

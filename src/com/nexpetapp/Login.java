@@ -34,12 +34,14 @@ import java.awt.event.ActionListener;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 import java.awt.event.ActionEvent;
+import javax.swing.JCheckBox;
 
 public class Login extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField;
+	private JCheckBox chcBox;
 
 	/**
 	 * Launch the application.
@@ -88,6 +90,13 @@ public class Login extends JFrame {
 				passwordField.grabFocus();
 			}
 		});
+		
+		chcBox = new JCheckBox("Armazenar informa\u00E7\u00F5es para o pr\u00F3ximo login");
+		chcBox.setSelected(true);
+		chcBox.setOpaque(false);
+		chcBox.setBounds(173, 236, 251, 23);
+		chcBox.setBackground(null);
+		contentPane.add(chcBox);
 		textField.setBounds(173, 129, 251, 35);
 		contentPane.add(textField);
 		textField.setColumns(10);
@@ -95,7 +104,7 @@ public class Login extends JFrame {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				login();
+				login(textField.getText(),passwordField.getText(), true);
 			}
 		});
 		btnLogin.setBounds(335, 267, 89, 23);
@@ -105,7 +114,7 @@ public class Login extends JFrame {
 		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		passwordField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				login();
+				login(textField.getText(),passwordField.getText(), true);
 			}
 		});
 		passwordField.setBounds(173, 194, 251, 35);
@@ -131,9 +140,9 @@ public class Login extends JFrame {
 		contentPane.add(lblNewLabel);
 
 	}
-	public void login(){
+	public void login(String email, String pass,boolean acess){
 		try {
-			JSONObject json = new JSONObject(sendPost(Functions.WEBSERVICE+"login.php", textField.getText(), passwordField.getText()));
+			JSONObject json = new JSONObject(sendPost(Functions.WEBSERVICE+"login.php", email, pass));
 			boolean error = json.getBoolean("error");
 			if(!error){
 				JSONObject userJson = json.getJSONObject("user");
@@ -148,6 +157,9 @@ public class Login extends JFrame {
 				Credentials.EMAIL = userJson.getString("email");
 				Credentials.RESPONSAVEL = userJson.getString("nomeResponsavel");
 				Credentials.DESCRICAO = userJson.getString("descricao");
+				if(chcBox.isSelected() && acess){
+					Functions.createAutoLogin(Credentials.EMAIL,passwordField.getText());
+				}
 				dispose();
 				new Thread(){
 					public void run(){

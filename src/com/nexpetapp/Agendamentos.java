@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,25 +46,7 @@ public class Agendamentos extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Agendamentos frame = new Agendamentos();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
 	public Agendamentos() {
 		List<Image> icons = Functions.getIconList();
 		setIconImages(icons);
@@ -100,11 +84,17 @@ public class Agendamentos extends JFrame {
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
+				Functions.delete(new File("config.np"));
 				new Login().setVisible(true);
 			}
 		});
 		btnLogout.setBounds(10, 11, 89, 23);
 		contentPane.add(btnLogout);
+		
+		JButton btnConfiguraes = new JButton("Configura\u00E7\u00F5es");
+		btnConfiguraes.setBounds(474, 11, 110, 23);
+		btnConfiguraes.setFocusable(false);
+		contentPane.add(btnConfiguraes);
 		
 		JLabel lblAgendamentos = new JLabel("Agendamentos");
 		lblAgendamentos.setFont(new Font("Century Gothic", Font.PLAIN, 24));

@@ -1,6 +1,9 @@
 package com.nexpetapp;
 import static com.nexpetapp.Functions.*;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +27,14 @@ public class Main {
 						Thread.sleep(10);
 					}
 					i.dispose();
-					new Login().setVisible(true);
+					File f = new File("config.np");
+					if(f.exists()){
+						ArrayList<String> a = new Functions().read(f);
+						new Login().login(a.get(0),a.get(1), false);
+					}else{
+						new Login().setVisible(true);
+					}
+
 				}catch(Exception e){}
 			}
 		}.start();
