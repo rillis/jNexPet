@@ -91,10 +91,27 @@ public class Agendamentos extends JFrame {
 		btnLogout.setBounds(10, 11, 89, 23);
 		contentPane.add(btnLogout);
 		
-		JButton btnConfiguraes = new JButton("Configura\u00E7\u00F5es");
-		btnConfiguraes.setBounds(474, 11, 110, 23);
-		btnConfiguraes.setFocusable(false);
-		contentPane.add(btnConfiguraes);
+		JButton btnServicos = new JButton("Servi\u00E7os");
+		btnServicos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new Thread(){
+					public void run(){
+						try{
+							dispose();
+							Entrando e = new Entrando("Carregando");
+							e.setVisible(true);
+							Constants.servicos = Functions.getServicos();
+							e.setVisible(false);
+							new Servicos().setVisible(true);
+						}catch(Exception e){}
+					}
+				}.start();
+				
+			}
+		});
+		btnServicos.setBounds(474, 11, 110, 23);
+		btnServicos.setFocusable(false);
+		contentPane.add(btnServicos);
 		
 		JLabel lblAgendamentos = new JLabel("Agendamentos");
 		lblAgendamentos.setFont(new Font("Century Gothic", Font.PLAIN, 24));

@@ -146,7 +146,6 @@ public class Login extends JFrame {
 			boolean error = json.getBoolean("error");
 			if(!error){
 				JSONObject userJson = json.getJSONObject("user");
-				System.out.print(userJson);
 				Credentials.UID = json.getString("uid");
 				Credentials.TELEFONE = userJson.getString("telefone");
 				Credentials.ENDERECO =  userJson.getString("endereco");
@@ -163,7 +162,7 @@ public class Login extends JFrame {
 				dispose();
 				new Thread(){
 					public void run(){
-						Entrando e = new Entrando();
+						Entrando e = new Entrando("Entrando");
 						e.setAlwaysOnTop(true);
 						e.setVisible(true);
 						Constants.agendamentos = Functions.getAgendamentos();

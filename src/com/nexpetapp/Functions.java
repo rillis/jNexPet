@@ -24,7 +24,7 @@ import org.json.JSONObject;
 
 public class Functions {
 		private final static String USER_AGENT = "Mozilla/5.0";
-		public final static String WEBSERVICE = "http://nexpetapp.com.br/java/";
+		public final static String WEBSERVICE = "http://localhost:8080/webservice/java/";
 		public static String sendPost(String url, String email, String senha) throws Exception {
 
 		URL obj = new URL(url);
@@ -105,6 +105,46 @@ public class Functions {
 			return response.toString();
 
 		}
+		private static String sendPostServicos(String url, String id) throws Exception {
+
+			URL obj = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+			//add reuqest header
+			con.setRequestMethod("POST");
+			con.setRequestProperty("User-Agent", USER_AGENT);
+			con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+			String urlParameters = "id="+id;
+
+			// Send post request
+			con.setDoOutput(true);
+			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes(urlParameters);
+			wr.flush();
+			wr.close();
+
+			int responseCode = con.getResponseCode();
+			/**
+			System.out.println("\nSending 'POST' request to URL : " + url);
+			System.out.println("Post parameters : " + urlParameters);
+			System.out.println("Response Code : " + responseCode);
+			*/
+
+			BufferedReader in = new BufferedReader(
+			        new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+
+			//print result
+			return response.toString();
+
+		}
 		public static String sysout(Object x){
 			System.out.println(x);
 			return x.toString();
@@ -145,6 +185,42 @@ public class Functions {
 					agendados[i][Constants.PAGOU]=pagou[i];
 				}
 				return agendados;
+			} catch (Exception e) {e.printStackTrace(); return null;}
+		}
+		public static String[][] getServicos(){
+			try {
+				String response = sendPostServicos(WEBSERVICE+"getServicos.php", Credentials.UID);
+				JSONObject json = new JSONObject(response);
+				//PADROES
+				JSONObject user = json.getJSONObject("user");
+				//N
+				int n = user.getInt("n");
+				String[] id = user.getJSONArray("id").toString().replace("[", "").replace("]", "").replace("\"", "").split(",");
+				String[] nome = user.getJSONArray("nome").toString().replace("[", "").replace("]", "").replace("\"", "").split(",");
+				String[] precoP = user.getJSONArray("precoP").toString().replace("[", "").replace("]", "").replace("\"", "").split(",");
+				String[] precoM = user.getJSONArray("precoM").toString().replace("[", "").replace("]", "").replace("\"", "").split(",");
+				String[] precoG = user.getJSONArray("precoG").toString().replace("[", "").replace("]", "").replace("\"", "").split(",");
+				String[] precoGG = user.getJSONArray("precoGG").toString().replace("[", "").replace("]", "").replace("\"", "").split(",");
+				String[] precoGato = user.getJSONArray("precoGato").toString().replace("[", "").replace("]", "").replace("\"", "").split(",");
+				String[] duracaoCao = user.getJSONArray("duracaoCao").toString().replace("[", "").replace("]", "").replace("\"", "").split(",");
+				String[] duracaoGato = user.getJSONArray("duracaoGato").toString().replace("[", "").replace("]", "").replace("\"", "").split(",");
+				String[] descricao = user.getJSONArray("descricao").toString().replace("[", "").replace("]", "").replace("\"", "").split(",");
+				
+				
+				String[][] servicos = new String[n][12];
+				for (int i = 0; i < n; i++) {
+					servicos[i][0]=id[i];
+					servicos[i][1]=nome[i];
+					servicos[i][2]=precoP[i];
+					servicos[i][3]=precoM[i];
+					servicos[i][4]=precoG[i];
+					servicos[i][5]=precoGG[i];
+					servicos[i][6]=precoGato[i];
+					servicos[i][7]=duracaoCao[i];
+					servicos[i][8]=duracaoGato[i];
+					servicos[i][9]=descricao[i];
+				}
+				return servicos;
 			} catch (Exception e) {e.printStackTrace(); return null;}
 		}
 		public static String getNamebyUID(String UID){
@@ -236,6 +312,14 @@ public class Functions {
 				write(config, s);
 			} catch (IOException e1) {
 				e1.printStackTrace();
+			}
+		}
+		public static void apagarServico(String id) {
+			try {
+				sendPostServicos(WEBSERVICE+"deleteServico.php", id);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 }

@@ -27,7 +27,7 @@ public class Entrando extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			Entrando dialog = new Entrando();
+			Entrando dialog = new Entrando("Teste");
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -38,7 +38,7 @@ public class Entrando extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public Entrando() {
+	public Entrando(String msg) {
 		setTitle("NexPet");
 		try {
 	        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -61,7 +61,7 @@ public class Entrando extends JDialog {
 		progressBar.setBounds(10, 126, 220, 13);
 		contentPanel.add(progressBar);
 		
-		JLabel lblEntrando = new JLabel("Entrando..");
+		JLabel lblEntrando = new JLabel(msg+"..");
 		lblEntrando.setFont(new Font("Century Gothic", Font.PLAIN, 28));
 		lblEntrando.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEntrando.setBounds(0, 0, 240, 126);
