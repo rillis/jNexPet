@@ -142,7 +142,9 @@ public class Login extends JFrame {
 	}
 	public void login(String email, String pass,boolean acess){
 		try {
-			JSONObject json = new JSONObject(sendPost(Functions.WEBSERVICE+"login.php", email, pass));
+			String s = sendPost(Functions.WEBSERVICE+"login.php", email, pass);
+			System.out.println(s);
+			JSONObject json = new JSONObject(s);
 			boolean error = json.getBoolean("error");
 			if(!error){
 				JSONObject userJson = json.getJSONObject("user");

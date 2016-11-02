@@ -1,5 +1,6 @@
 package com.nexpetapp;
 
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
@@ -18,15 +19,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.tools.JavaFileObject;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.notify.Notify;
 
 public class Functions {
 		private final static String USER_AGENT = "Mozilla/5.0";
-		public final static String WEBSERVICE = "http://localhost:8080/webservice/java/";
+		public final static String WEBSERVICE = "http://java.nexpetapp.com.br/";
 		public static String sendPost(String url, String email, String senha) throws Exception {
 
 		URL obj = new URL(url);
@@ -407,6 +411,60 @@ public class Functions {
 					return 99;
 				}
 		}
+		public static String sendPostInfoOfUser(String UID) {
+			try{
+				URL obj = new URL(WEBSERVICE+"infoUser.php");
+				HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+				con.setRequestMethod("POST");
+				con.setRequestProperty("User-Agent", USER_AGENT);
+				con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+				String urlParameters = "uid="+UID;
+				con.setDoOutput(true);
+				DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+				wr.writeBytes(urlParameters);
+				wr.flush();
+				wr.close();
+				int responseCode = con.getResponseCode();
+				BufferedReader in = new BufferedReader(
+				        new InputStreamReader(con.getInputStream()));
+				String inputLine;
+				StringBuffer response = new StringBuffer();
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+				in.close();
+				return response.toString();
+				}catch(Exception e){
+					return "Error";
+				}
+		}
+		public static String sendAction(String action, String id) {
+			try{
+				URL obj = new URL(WEBSERVICE+"action.php");
+				HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+				con.setRequestMethod("POST");
+				con.setRequestProperty("User-Agent", USER_AGENT);
+				con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+				String urlParameters = "action="+action+"&id="+id;
+				con.setDoOutput(true);
+				DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+				wr.writeBytes(urlParameters);
+				wr.flush();
+				wr.close();
+				int responseCode = con.getResponseCode();
+				BufferedReader in = new BufferedReader(
+				        new InputStreamReader(con.getInputStream()));
+				String inputLine;
+				StringBuffer response = new StringBuffer();
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+				in.close();
+				return response.toString();
+				}catch(Exception e){
+					return "Error";
+				}
+		}
 		public static void iniciateCheck(String nomePet) {
 			new Thread(){
 				public void run(){
@@ -429,5 +487,40 @@ public class Functions {
 		}
 		protected static int getNumberOfAgendamentos(String nomePet) {
 			return sendPostNumber(nomePet);
+		}
+		public static String moreInfo(Component c, String uSERUID) {
+			try {
+				JSONObject j = new JSONObject(sendPostInfoOfUser(uSERUID));
+				sysout(j);
+				//formatação
+				String sexo = "";
+				if(j.optString("sexo").equals("")){
+						sexo = "NULO";
+				}else{
+					sexo = j.optString("sexo").substring(0,1).toUpperCase() + j.optString("sexo").substring(1);
+				}
+				String telefone = "";
+				if(j.optString("telefone").equals("")){
+					telefone = "NULO";
+				}else{
+					telefone = "("+j.optString("telefone").substring(0, 2)+")"+j.optString("telefone").substring(2);
+				}
+				String celular = "";
+				if(j.optString("celular").equals("")){
+					celular = "NULO";
+				}else{
+					celular = "("+j.optString("celular").substring(0, 2)+")"+j.optString("celular").substring(2);
+				}
+				
+				String msg = "Nome: "+j.optString("nome")+"\nEmail: "+j.optString("email")+"\nSexo: "+sexo+"\nTelefone: "+telefone+"\nCelular: "+celular+"\nEndereço: "+j.optString("endereco")+" "+j.optString("complemento")+"\nBairro: "+j.optString("bairro");
+				return msg;
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return e.getMessage();
+			}
+		}
+		public static String fireAction(String action, String id) {
+			return sendAction(action, id);
 		}
 }

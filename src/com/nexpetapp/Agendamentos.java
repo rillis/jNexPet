@@ -140,6 +140,7 @@ public class Agendamentos extends JFrame {
 		    	list_1.setSelectedIndices(new int[] {-1});
 		        JList list = (JList)evt.getSource();
 		        if (evt.getClickCount() == 2) {
+		        	dispose();
 		        	detalhes(list.getSelectedIndex(),list.getSelectedValue(),false);
 		        }
 		    }
@@ -150,6 +151,7 @@ public class Agendamentos extends JFrame {
 		    	list.setSelectedIndices(new int[] {-1});
 		        JList list = (JList)evt.getSource();
 		        if (evt.getClickCount() == 2) {
+		        	dispose();
 		        	detalhes(list_1.getSelectedIndex(),list_1.getSelectedValue(),true);
 		        }
 		    }
@@ -162,6 +164,7 @@ public class Agendamentos extends JFrame {
 		JButton btnGetid = new JButton("Informa\u00E7\u00F5es");
 		btnGetid.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				dispose();
 				detalhes(list.getSelectedIndex(),list.getSelectedValue(),false);
 			}
 
@@ -201,7 +204,7 @@ public class Agendamentos extends JFrame {
 			String[] a =value.toString().split("]");
 			String id = a[0].replace("[", "");
 			String[][] list = Functions.getAgendamentos();
-			String s_NOME = null, s_ANIMAL = null, s_DATA = null,s_SERVICO = null,s_PRECOFINAL = null,t_ADICIONAIS = null, s_ADICIONAIS = null,t_FORMA = null, s_FORMA = null,t_CONFIRMADO = null, s_CONFIRMADO = null,t_PAGOU = null, s_PAGOU = null;
+			String s_NOME = null,userUID=null, s_ANIMAL = null, s_DATA = null,s_SERVICO = null,s_PRECOFINAL = null,t_ADICIONAIS = null, s_ADICIONAIS = null,t_FORMA = null, s_FORMA = null,t_CONFIRMADO = null, s_CONFIRMADO = null,t_PAGOU = null, s_PAGOU = null;
 			int iCont = 0;
 			for (int i = 0; i < list.length; i++) {
 				if(Integer.parseInt(list[i][Constants.ID])==Integer.parseInt(id)){
@@ -214,6 +217,7 @@ public class Agendamentos extends JFrame {
 					t_FORMA = list[i][Constants.FORMAPAGAMENTO];
 					t_CONFIRMADO = list[i][Constants.CONFIRMADO];
 					t_PAGOU = list[i][Constants.PAGOU];
+					userUID= list[i][Constants.USUARIOUID];
 					if(t_ADICIONAIS.equals("empty")){
 						s_ADICIONAIS = "Nenhum";
 					}else{
@@ -236,23 +240,13 @@ public class Agendamentos extends JFrame {
 					}
 				}
 			}
-			Detalhado det = new Detalhado("Carregando", s_ANIMAL, s_DATA, s_SERVICO, s_PRECOFINAL, s_ADICIONAIS, s_FORMA, s_CONFIRMADO, s_PAGOU);
-			trytochangename(iCont,list,det);
+			Detalhado det = new Detalhado("Carregando", s_ANIMAL, s_DATA, s_SERVICO, s_PRECOFINAL, s_ADICIONAIS, s_FORMA, s_CONFIRMADO, s_PAGOU, userUID, id);
+			//trytochangename(iCont,list,det);
 			if(s_PAGOU.equals("Sim")){
 				det.btnPagou.setEnabled(false);
 			}
 			det.btnConfirmar.setEnabled(confirmado);
 			det.setVisible(true);
 		}
-	}
-
-	private void trytochangename(int i, String[][] list, Detalhado det) {
-		
-		new Thread(){
-			public void run(){
-				String s_NOME = Functions.getNamebyUID(list[i][Constants.USUARIOUID]);
-				det.lblNomeCliente.setText("Nome do cliente: "+s_NOME);
-			}
-		}.start();
 	}
 }

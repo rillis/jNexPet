@@ -15,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 
 public class Detalhado extends JDialog {
@@ -28,7 +30,7 @@ public class Detalhado extends JDialog {
 	 */
 
 
-	public Detalhado(String CLIENTE, String ANIMAL, String DATAHORA, String SERVICO, String PRECOFINAL, String ADICIONAIS, String FORMA, String CONFIRMADO, String PAGOU) {
+	public Detalhado(String CLIENTE, String ANIMAL, String DATAHORA, String SERVICO, String PRECOFINAL, String ADICIONAIS, String FORMA, String CONFIRMADO, String PAGOU, String USERUID, String id) {
 		setTitle("NexPet");
 		try {
 	        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -41,7 +43,7 @@ public class Detalhado extends JDialog {
 		ImageIcon icon = new ImageIcon(url);
 		getContentPane().setLayout(null);
 		{
-			lblNomeCliente = new JLabel("Nome do cliente: "+CLIENTE);
+			lblNomeCliente = new JLabel("Cliente:");
 			lblNomeCliente.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			lblNomeCliente.setBounds(10, 25, 414, 22);
 			getContentPane().add(lblNomeCliente);
@@ -107,15 +109,59 @@ public class Detalhado extends JDialog {
 				JButton okButton = new JButton("Fechar");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						dispose();
+						new Thread(){
+							public void run(){
+								dispose();
+								Entrando f = new Entrando("Carregando");
+								f.setAlwaysOnTop(true);
+								f.setVisible(true);
+								Constants.agendamentos = Functions.getAgendamentos();
+								f.dispose();
+								new Agendamentos().setVisible(true);
+							}
+						}.start();
 					}
 				});
 				{
 					btnPagou = new JButton("Pagou");
+					btnPagou.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							//pagou
+							new Thread(){
+								public void run(){
+									dispose();
+									Entrando f = new Entrando("Alterando");
+									f.setAlwaysOnTop(false);
+									f.setVisible(true);
+									Functions.fireAction("p",id);
+									Constants.agendamentos = Functions.getAgendamentos();
+									f.dispose();
+									new Agendamentos().setVisible(true);
+								}
+							}.start();
+						}
+					});
 					buttonPane.add(btnPagou);
 				}
 				{
 					btnConfirmar = new JButton("Confirmar");
+					btnConfirmar.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							//confirmar
+							new Thread(){
+								public void run(){
+									dispose();
+									Entrando f = new Entrando("Alterando");
+									f.setAlwaysOnTop(false);
+									f.setVisible(true);
+									Functions.fireAction("c",id);
+									Constants.agendamentos = Functions.getAgendamentos();
+									f.dispose();
+									new Agendamentos().setVisible(true);
+								}
+							}.start();
+						}
+					});
 					buttonPane.add(btnConfirmar);
 				}
 				okButton.setActionCommand("OK");
@@ -123,10 +169,28 @@ public class Detalhado extends JDialog {
 				getRootPane().setDefaultButton(okButton);
 			}
 		}
+		
+		JButton btnInformaes = new JButton("Informa\u00E7\u00F5es");
+		btnInformaes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Thread(){
+					public void run(){
+						Entrando f = new Entrando("Procurando");
+						f.setAlwaysOnTop(true);
+						f.setVisible(true);
+						String s= Functions.moreInfo(btnInformaes,USERUID);
+						f.dispose();
+						JOptionPane.showMessageDialog(null, s);
+					}
+				}.start();
+				
+			}
+		});
+		btnInformaes.setBounds(66, 25, 113, 23);
+		getContentPane().add(btnInformaes);
 		JLabel lblNewLabel = new JLabel("\r\n");
 		lblNewLabel.setIcon(icon);
 		lblNewLabel.setBounds(0,0,434,396);
 		getContentPane().add(lblNewLabel);
 	}
-
 }
