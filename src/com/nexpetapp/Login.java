@@ -168,6 +168,7 @@ public class Login extends JFrame {
 						Constants.agendamentos = Functions.getAgendamentos();
 						e.dispose();
 						new Agendamentos().setVisible(true);
+						Functions.iniciateCheck(Credentials.NOME);
 					}
 				}.start();
 			}else{

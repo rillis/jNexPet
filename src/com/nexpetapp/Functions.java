@@ -22,6 +22,8 @@ import javax.tools.JavaFileObject;
 
 import org.json.JSONObject;
 
+import com.notify.Notify;
+
 public class Functions {
 		private final static String USER_AGENT = "Mozilla/5.0";
 		public final static String WEBSERVICE = "http://localhost:8080/webservice/java/";
@@ -318,8 +320,114 @@ public class Functions {
 			try {
 				sendPostServicos(WEBSERVICE+"deleteServico.php", id);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		public static String setSQL(String servicos, String coluna, String valor) {
+			return sendPostUpdateServicos(WEBSERVICE+"updateServico.php", servicos, coluna, valor);
+		}
+		private static String sendPostUpdateServicos(String url, String id, String coluna, String valor) {
+			try{
+			URL obj = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			con.setRequestMethod("POST");
+			con.setRequestProperty("User-Agent", USER_AGENT);
+			con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			String urlParameters = "id="+id+"&coluna="+coluna+"&valor="+valor;
+			con.setDoOutput(true);
+			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes(urlParameters);
+			wr.flush();
+			wr.close();
+			int responseCode = con.getResponseCode();
+			BufferedReader in = new BufferedReader(
+			        new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			return response.toString();
+			}catch(Exception e){
+				return e.getMessage();
+			}
+		}
+		public static String sendPostCriarServico(String[] temp) {
+			try{
+				URL obj = new URL(WEBSERVICE+"criarServico.php");
+				HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+				con.setRequestMethod("POST");
+				con.setRequestProperty("User-Agent", USER_AGENT);
+				con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+				String urlParameters = "nome="+temp[0]+"&precoP="+temp[1]+"&precoM="+temp[2]+"&precoG="+temp[3]+"&precoGG="+temp[4]+"&precoGato="+temp[5]+"&duracaoCao="+temp[6]+"&duracaoGato="+temp[7]+"&descricao="+temp[8]+"&UID="+temp[9];
+				con.setDoOutput(true);
+				DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+				wr.writeBytes(urlParameters);
+				wr.flush();
+				wr.close();
+				int responseCode = con.getResponseCode();
+				BufferedReader in = new BufferedReader(
+				        new InputStreamReader(con.getInputStream()));
+				String inputLine;
+				StringBuffer response = new StringBuffer();
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+				in.close();
+				return response.toString();
+				}catch(Exception e){
+					return "Exception "+e.getMessage();
+				}
+		}
+		public static int sendPostNumber(String nomePet) {
+			try{
+				URL obj = new URL(WEBSERVICE+"numeroAgendamentos.php");
+				HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+				con.setRequestMethod("POST");
+				con.setRequestProperty("User-Agent", USER_AGENT);
+				con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+				String urlParameters = "nome="+nomePet;
+				con.setDoOutput(true);
+				DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+				wr.writeBytes(urlParameters);
+				wr.flush();
+				wr.close();
+				int responseCode = con.getResponseCode();
+				BufferedReader in = new BufferedReader(
+				        new InputStreamReader(con.getInputStream()));
+				String inputLine;
+				StringBuffer response = new StringBuffer();
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+				in.close();
+				return Integer.parseInt(response.toString());
+				}catch(Exception e){
+					return 99;
+				}
+		}
+		public static void iniciateCheck(String nomePet) {
+			new Thread(){
+				public void run(){
+					try{
+						int OLD = Functions.getNumberOfAgendamentos(nomePet);
+						while(true){
+							int NEW = Functions.getNumberOfAgendamentos(nomePet);
+							if(OLD!=NEW){
+								if(OLD<NEW){
+									int NOVAS = NEW-OLD;
+									Notify.notificar("NexPet", NOVAS+" novo(s) agendamento(s)", 3000);
+									OLD=NEW;
+								}
+							}
+							Thread.sleep(600*1000);
+						}
+					}catch(Exception e){}
+				}
+			}.start();
+		}
+		protected static int getNumberOfAgendamentos(String nomePet) {
+			return sendPostNumber(nomePet);
 		}
 }

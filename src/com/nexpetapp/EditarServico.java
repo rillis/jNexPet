@@ -24,8 +24,8 @@ import java.awt.event.ActionEvent;
 public class EditarServico extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField textFieldNome, textFieldPrecoP, textFieldPrecoM, textFieldPrecoG, textFieldPrecoGG;
-	JLabel lblNome, lblPrecocoPequeno, lblPrecocoMedio, lblPrecocoGrande, lblPrecocoGigante;
+	private JTextField textFieldNome, textFieldPrecoP, textFieldPrecoM, textFieldPrecoG, textFieldPrecoGG, textFieldPrecoGato, textFieldDuracaoCao, textFieldDuracaoGato, textFieldDescricao;
+	JLabel lblNome, lblPrecocoPequeno, lblPrecocoMedio, lblPrecocoGrande, lblPrecocoGigante, lblPrecogato, lblDuracaoCao, lblDuracaoGato, lblDescricao;
 	/**
 	 * Launch the application.
 	 */
@@ -61,7 +61,7 @@ public class EditarServico extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!textFieldNome.getText().equals("") && !textFieldNome.getText().equals(Constants.servicos[id][1])){
 					lblNome.setText("Nome: "+textFieldNome.getText());
-					//setnome
+					Functions.setSQL(Constants.servicos[id][0],"nome", textFieldNome.getText());
 					textFieldNome.hide();
 				}else{
 					textFieldNome.hide();
@@ -79,7 +79,7 @@ public class EditarServico extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!textFieldPrecoP.getText().equals("") && !textFieldPrecoP.getText().equals(Constants.servicos[id][2])){
 					lblPrecocoPequeno.setText("Preco (C\u00E3o Pequeno): "+textFieldPrecoP.getText());
-					//setnome
+					Functions.setSQL(Constants.servicos[id][0],"precoP", textFieldPrecoP.getText());
 					textFieldPrecoP.hide();
 				}else{
 					textFieldPrecoP.hide();
@@ -97,7 +97,7 @@ public class EditarServico extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!textFieldPrecoM.getText().equals("") && !textFieldPrecoM.getText().equals(Constants.servicos[id][3])){
 					lblPrecocoMedio.setText("Preco (C\u00E3o Médio): "+textFieldPrecoM.getText());
-					//setnome
+					Functions.setSQL(Constants.servicos[id][0],"precoM", textFieldPrecoM.getText());
 					textFieldPrecoM.hide();
 				}else{
 					textFieldPrecoM.hide();
@@ -115,7 +115,7 @@ public class EditarServico extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!textFieldPrecoG.getText().equals("") && !textFieldPrecoG.getText().equals(Constants.servicos[id][4])){
 					lblPrecocoGrande.setText("Preco (C\u00E3o Grande): "+textFieldPrecoG.getText());
-					//setnome
+					Functions.setSQL(Constants.servicos[id][0],"precoG", textFieldPrecoG.getText());
 					textFieldPrecoG.hide();
 				}else{
 					textFieldPrecoG.hide();
@@ -128,6 +128,77 @@ public class EditarServico extends JDialog {
 		contentPanel.add(textFieldPrecoG);
 		textFieldPrecoG.setColumns(10);
 		
+		textFieldPrecoGG = new JTextField();
+		textFieldPrecoGG.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(!textFieldPrecoGG.getText().equals("") && !textFieldPrecoGG.getText().equals(Constants.servicos[id][5])){
+					lblPrecocoGigante.setText("Preco (C\u00E3o Gigante): "+textFieldPrecoGG.getText());
+					System.out.println(Functions.setSQL(Constants.servicos[id][0],"precoGG", textFieldPrecoGG.getText()));
+					textFieldPrecoGG.hide();
+				}else{
+					textFieldPrecoGG.hide();
+				}
+			}
+		});
+		textFieldPrecoGG.setVisible(false);
+		textFieldPrecoGG.setText(Constants.servicos[id][5]);
+		textFieldPrecoGG.setBounds(109, 149, 325, 20);
+		contentPanel.add(textFieldPrecoGG);
+		textFieldPrecoGG.setColumns(10);
+		
+		textFieldPrecoGato = new JTextField();
+		textFieldPrecoGato.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(!textFieldPrecoGato.getText().equals("") && !textFieldPrecoGato.getText().equals(Constants.servicos[id][6])){
+					lblPrecogato.setText("Preco (Gato): "+textFieldPrecoGato.getText());
+					Functions.setSQL(Constants.servicos[id][0],"precoGato", textFieldPrecoGato.getText());
+					textFieldPrecoGato.hide();
+				}else{
+					textFieldPrecoGato.hide();
+				}
+			}
+		});
+		textFieldPrecoGato.setVisible(false);
+		textFieldPrecoGato.setText(Constants.servicos[id][6]);
+		textFieldPrecoGato.setBounds(76, 174, 358, 20);
+		contentPanel.add(textFieldPrecoGato);
+		textFieldPrecoGato.setColumns(10);
+		
+		textFieldDuracaoCao = new JTextField();
+		textFieldDuracaoCao.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(!textFieldDuracaoCao.getText().equals("") && !textFieldDuracaoCao.getText().equals(Constants.servicos[id][7])){
+					lblDuracaoCao.setText("Duracao C\u00E3o (em minutos): "+textFieldDuracaoCao.getText());
+					Functions.setSQL(Constants.servicos[id][0],"duracaoCao", textFieldDuracaoCao.getText());
+					textFieldDuracaoCao.hide();
+				}else{
+					textFieldDuracaoCao.hide();
+				}
+			}
+		});
+		textFieldDuracaoCao.setVisible(false);
+		textFieldDuracaoCao.setText(Constants.servicos[id][7]);
+		textFieldDuracaoCao.setBounds(141, 199, 293, 20);
+		contentPanel.add(textFieldDuracaoCao);
+		textFieldDuracaoCao.setColumns(10);
+		
+		textFieldDuracaoGato = new JTextField();
+		textFieldDuracaoGato.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(!textFieldDuracaoGato.getText().equals("") && !textFieldDuracaoGato.getText().equals(Constants.servicos[id][8])){
+					lblDuracaoGato.setText("Duracao Gato (em minutos): "+textFieldDuracaoGato.getText());
+					Functions.setSQL(Constants.servicos[id][0],"duracaoGato", textFieldDuracaoGato.getText());
+					textFieldDuracaoGato.hide();
+				}else{
+					textFieldDuracaoGato.hide();
+				}
+			}
+		});
+		textFieldDuracaoGato.setVisible(false);
+		textFieldDuracaoGato.setText(Constants.servicos[id][8]);
+		textFieldDuracaoGato.setBounds(141, 224, 293, 20);
+		contentPanel.add(textFieldDuracaoGato);
+		textFieldDuracaoGato.setColumns(10);
 		{
 			JLabel lblEditandoUmServico = new JLabel("Editando um servico: (Clique para editar)");
 			lblEditandoUmServico.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -195,28 +266,73 @@ public class EditarServico extends JDialog {
 			contentPanel.add(lblPrecocoGigante);
 		}
 		{
-			JLabel lblPrecogato = new JLabel("Preco (Gato): "+Constants.servicos[id][6]);
+			lblPrecogato = new JLabel("Preco (Gato): "+Constants.servicos[id][6]);
 			lblPrecogato.setBounds(10, 177, 414, 14);
+			lblPrecogato.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					textFieldPrecoGato.show();
+					textFieldPrecoGato.grabFocus();
+				}
+			});
 			contentPanel.add(lblPrecogato);
 		}
 		{
-			JLabel lblDuracaocoEm = new JLabel("Duracao (C\u00E3o em minutos): "+Constants.servicos[id][7]);
-			lblDuracaocoEm.setBounds(10, 202, 414, 14);
-			contentPanel.add(lblDuracaocoEm);
+			lblDuracaoCao = new JLabel("Duracao C\u00E3o (em minutos): "+Constants.servicos[id][7]);
+			lblDuracaoCao.setBounds(10, 202, 414, 14);
+			lblDuracaoCao.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					textFieldDuracaoCao.show();
+					textFieldDuracaoCao.grabFocus();
+				}
+			});
+			contentPanel.add(lblDuracaoCao);
 		}
 		{
-			JLabel lblDuracaogatoEm = new JLabel("Duracao (Gato em minutos): "+Constants.servicos[id][8]);
-			lblDuracaogatoEm.setBounds(10, 227, 414, 14);
-			contentPanel.add(lblDuracaogatoEm);
+			lblDuracaoGato = new JLabel("Duracao Gato (em minutos): "+Constants.servicos[id][8]);
+			lblDuracaoGato.setBounds(10, 227, 414, 14);
+			lblDuracaoGato.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					textFieldDuracaoGato.show();
+					textFieldDuracaoGato.grabFocus();
+				}
+			});
+			contentPanel.add(lblDuracaoGato);
 		}
 		{
 			JScrollPane scrollPane = new JScrollPane();
 			scrollPane.setBounds(10, 250, 414, 50);
 			contentPanel.add(scrollPane);
 			{
-				JLabel lblDescrio = new JLabel("Descri\u00E7\u00E3o: "+Constants.servicos[id][9]);
-				scrollPane.setViewportView(lblDescrio);
+				lblDescricao = new JLabel("Descri\u00E7\u00E3o: "+Constants.servicos[id][9]);
+				scrollPane.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						textFieldDescricao.show();
+						textFieldDescricao.grabFocus();
+					}
+				});
+				scrollPane.setViewportView(lblDescricao);
 			}
+			
+			textFieldDescricao = new JTextField();
+			scrollPane.setColumnHeaderView(textFieldDescricao);
+			textFieldDescricao.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if(!textFieldDescricao.getText().equals("") && !textFieldDescricao.getText().equals(Constants.servicos[id][9])){
+						lblDescricao.setText("Descri\u00E7\u00E3o: "+textFieldDescricao.getText());
+						Functions.setSQL(Constants.servicos[id][0],"descricao", textFieldDescricao.getText());
+						textFieldDescricao.hide();
+					}else{
+						textFieldDescricao.hide();
+					}
+				}
+			});
+			textFieldDescricao.setVisible(false);
+			textFieldDescricao.setText(Constants.servicos[id][9]);
+			textFieldDescricao.setColumns(10);
 		}
 		{
 			JButton btnVoltar = new JButton("Voltar");

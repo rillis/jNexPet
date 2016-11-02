@@ -90,6 +90,12 @@ public class Servicos extends JFrame {
 		lista.addElement("["+s[i][0]+"/"+i+"] Nome: "+s[i][1]+" | Descrição: "+s[i][9]);
 		}
 		JButton btnNovo = new JButton("Novo");
+		btnNovo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				new NovoServico().setVisible(true);
+			}
+		});
 		btnNovo.setBounds(495, 11, 89, 23);
 		contentPane.add(btnNovo);
 		
